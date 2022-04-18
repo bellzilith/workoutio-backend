@@ -17,7 +17,7 @@ router.use('/:recordId', async (req, res, next) => {
     return res.status(404).send('Record not found');
   }
   req.record = foundRecord;
-  req.recordIndex = index;
+  // req.recordIndex = index;
   return next();
 });
 
@@ -48,15 +48,15 @@ router.post('/', async (req, res, next) => {
   return res.status(201).send(newRecord);
 });
 
-router.put('/:recordId', (req, res, next) => {
+router.put('/:recordId', async (req, res, next) => {
   const body = req.body;
   const updateRecords = await RecordModel.updateOne(req.RecordModel, body);
   return res.send(updateRecords)
 });
 
 router.delete('/:recordId', async (req, res, next) => {
-  await RecordModel.deleteOne({ _id: req.params.recordId });
-  return res.status(204).send(); // 204 = No content which mean it successfully removed
+  const deleteRecord = await RecordModel.deleteOne(req.record);
+  return res.status(204).send(deleteRecord); // 204 = No content which mean it successfully removed
 });
 
 module.exports = router;
